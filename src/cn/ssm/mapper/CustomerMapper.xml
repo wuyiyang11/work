@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.ssm.mapper.CustomerMapper" >
+  <resultMap id="BaseResultMap" type="cn.ssm.bean.Customer" >
+    <id column="cust_id" property="custId" jdbcType="INTEGER" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="cust_age" property="custAge" jdbcType="VARCHAR" />
+    <result column="cust_gender" property="custGender" jdbcType="VARCHAR" />
+    <result column="cust_user_id" property="custUserId" jdbcType="INTEGER" />
+    <result column="cust_source" property="custSource" jdbcType="VARCHAR" />
+    <result column="cust_industry" property="custIndustry" jdbcType="VARCHAR" />
+    <result column="cust_level" property="custLevel" jdbcType="VARCHAR" />
+    <result column="cust_phone" property="custPhone" jdbcType="VARCHAR" />
+    <result column="cust_email" property="custEmail" jdbcType="VARCHAR" />
+    <result column="cust_address" property="custAddress" jdbcType="VARCHAR" />
+    <result column="cust_createtime" property="custCreatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cust_id, cust_name, cust_age, cust_gender, cust_user_id, cust_source, cust_industry, 
+    cust_level, cust_phone, cust_email, cust_address, cust_createtime
+  </sql>
+  
+  <sql id="selectCustomerListWhere">
+  	<where>
+  		<if test="custName!=null ">
+  			and cust_name like "%"#{custName,jdbcType=VARCHAR}"%"
+  		</if>
+  		<if test="startTime!=null and endTime!=null">
+  			and cust_createtime between #{startTime} and #{endTime}
+  		</if>
+  		<if test="startTime==null and endTime!=null">
+  				and cust_createtime &lt;= #{endTime}
+  		</if>
+  		<if test="startTime!=null and endTime==null">
+  			and cust_createtime >= #{startTime}
+  		</if>
+  		
+  		
+  	</where>
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from customer
+    where cust_id = #{custId,jdbcType=INTEGER}
+  </select>
+  
+  <!-- select -->
+  <select id="selectCustomerList" parameterType="cn.ssm.bean.Customer" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from customer
+    <include refid="selectCustomerListWhere" />
+    <if test="start !=null and rows!=null">
+    		limit #{start},#{rows}
+    </if>
+  </select>
+  <select id="selectCustomerListCount" parameterType="cn.ssm.bean.Customer" resultType="java.lang.Integer">
+	  select count(*) from customer
+	  <include refid="selectCustomerListWhere" />
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from customer
+    where cust_id = #{custId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.ssm.bean.Customer" >
+    insert into customer (cust_id, cust_name, cust_age, 
+      cust_gender, cust_user_id, cust_source, 
+      cust_industry, cust_level, cust_phone, 
+      cust_email, cust_address, cust_createtime
+      )
+    values (#{custId,jdbcType=INTEGER}, #{custName,jdbcType=VARCHAR}, #{custAge,jdbcType=VARCHAR}, 
+      #{custGender,jdbcType=VARCHAR}, #{custUserId,jdbcType=INTEGER}, #{custSource,jdbcType=VARCHAR}, 
+      #{custIndustry,jdbcType=VARCHAR}, #{custLevel,jdbcType=VARCHAR}, #{custPhone,jdbcType=VARCHAR}, 
+      #{custEmail,jdbcType=VARCHAR}, #{custAddress,jdbcType=VARCHAR}, #{custCreatetime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.ssm.bean.Customer" >
+    insert into customer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="custId != null" >
+        cust_id,
+      </if>
+      <if test="custName != null" >
+        cust_name,
+      </if>
+      <if test="custAge != null" >
+        cust_age,
+      </if>
+      <if test="custGender != null" >
+        cust_gender,
+      </if>
+      <if test="custUserId != null" >
+        cust_user_id,
+      </if>
+      <if test="custSource != null" >
+        cust_source,
+      </if>
+      <if test="custIndustry != null" >
+        cust_industry,
+      </if>
+      <if test="custLevel != null" >
+        cust_level,
+      </if>
+      <if test="custPhone != null" >
+        cust_phone,
+      </if>
+      <if test="custEmail != null" >
+        cust_email,
+      </if>
+      <if test="custAddress != null" >
+        cust_address,
+      </if>
+      <if test="custCreatetime != null" >
+        cust_createtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="custId != null" >
+        #{custId,jdbcType=INTEGER},
+      </if>
+      <if test="custName != null" >
+        #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="custAge != null" >
+        #{custAge,jdbcType=VARCHAR},
+      </if>
+      <if test="custGender != null" >
+        #{custGender,jdbcType=VARCHAR},
+      </if>
+      <if test="custUserId != null" >
+        #{custUserId,jdbcType=INTEGER},
+      </if>
+      <if test="custSource != null" >
+        #{custSource,jdbcType=VARCHAR},
+      </if>
+      <if test="custIndustry != null" >
+        #{custIndustry,jdbcType=VARCHAR},
+      </if>
+      <if test="custLevel != null" >
+        #{custLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="custPhone != null" >
+        #{custPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="custEmail != null" >
+        #{custEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="custAddress != null" >
+        #{custAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="custCreatetime != null" >
+        #{custCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.ssm.bean.Customer" >
+    update customer
+    <set >
+      <if test="custName != null" >
+        cust_name = #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="custAge != null" >
+        cust_age = #{custAge,jdbcType=VARCHAR},
+      </if>
+      <if test="custGender != null" >
+        cust_gender = #{custGender,jdbcType=VARCHAR},
+      </if>
+      <if test="custUserId != null" >
+        cust_user_id = #{custUserId,jdbcType=INTEGER},
+      </if>
+      <if test="custSource != null" >
+        cust_source = #{custSource,jdbcType=VARCHAR},
+      </if>
+      <if test="custIndustry != null" >
+        cust_industry = #{custIndustry,jdbcType=VARCHAR},
+      </if>
+      <if test="custLevel != null" >
+        cust_level = #{custLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="custPhone != null" >
+        cust_phone = #{custPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="custEmail != null" >
+        cust_email = #{custEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="custAddress != null" >
+        cust_address = #{custAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="custCreatetime != null" >
+        cust_createtime = #{custCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where cust_id = #{custId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.ssm.bean.Customer" >
+    update customer
+    set cust_name = #{custName,jdbcType=VARCHAR},
+      cust_age = #{custAge,jdbcType=VARCHAR},
+      cust_gender = #{custGender,jdbcType=VARCHAR},
+      cust_user_id = #{custUserId,jdbcType=INTEGER},
+      cust_source = #{custSource,jdbcType=VARCHAR},
+      cust_industry = #{custIndustry,jdbcType=VARCHAR},
+      cust_level = #{custLevel,jdbcType=VARCHAR},
+      cust_phone = #{custPhone,jdbcType=VARCHAR},
+      cust_email = #{custEmail,jdbcType=VARCHAR},
+      cust_address = #{custAddress,jdbcType=VARCHAR},
+      cust_createtime = #{custCreatetime,jdbcType=TIMESTAMP}
+    where cust_id = #{custId,jdbcType=INTEGER}
+  </update>
+</mapper>
